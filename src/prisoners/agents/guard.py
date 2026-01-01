@@ -85,8 +85,18 @@ class Guard(GreenAgent):
             )
             final_scores = utils.aggregate_scores(score_history)
 
+            if final_scores[0] == final_scores[1]:
+                winner = "draw"
+            else:
+                winner = "a" if final_scores[0] < final_scores[1] else "b"
+
             results = EvalResult(
-                scores={"a": final_scores[0], "b": final_scores[1]}, details={}
+                winner=winner,
+                scores={"a": final_scores[0], "b": final_scores[1]},
+                choices={
+                    "a": [x[0] for x in choice_history],
+                    "b": [x[1] for x in choice_history],
+                },
             )
 
             logger.info(f"Final scores: {results.model_dump_json()}")
@@ -95,7 +105,7 @@ class Guard(GreenAgent):
                 parts=[
                     Part(root=TextPart(text=results.model_dump_json())),
                 ],
-                name="Result",
+                name="result",
             )
         finally:
             self._tool_provider.reset()
@@ -152,12 +162,22 @@ class Guard(GreenAgent):
         )
 
         # Remaining conversation rounds
-        for _ in range(num_conversations_rounds - 1):
+        for _ in range(num_conversations_rounds - 2):
             for x in ["a", "b"]:
                 response = await turn(
                     x,
                     f"Your friend said: {response}, what is your response?",
                 )
+
+        # Final response
+        for x in ["a", "b"]:
+            response = await turn(
+                x,
+                (
+                    f"Your friend said: {response}, this is the "
+                    "last message you can send, what is your response?"
+                ),
+            )
 
         await updater.start_work(
             new_agent_text_message("The prisoners will now make their choice...")

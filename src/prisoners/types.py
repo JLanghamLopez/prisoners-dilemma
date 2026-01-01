@@ -1,6 +1,13 @@
+from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, HttpUrl
+
+
+class Choice(Enum):
+    testify = 0
+    silence = 1
+    unrecognised = 2
 
 
 class EvalRequest(BaseModel):
@@ -9,5 +16,6 @@ class EvalRequest(BaseModel):
 
 
 class EvalResult(BaseModel):
+    winner: str
     scores: dict[str, int]
-    details: dict[str, Any]
+    choices: dict[str, list[Choice]]

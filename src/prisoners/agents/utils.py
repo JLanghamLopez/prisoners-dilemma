@@ -1,14 +1,7 @@
-from enum import Enum
-
 from pydantic import HttpUrl
 
 from prisoners.tool_provider import ToolProvider
-
-
-class Choice(Enum):
-    testify = 0
-    silence = 1
-    unrecognised = 2
+from prisoners.types import Choice
 
 
 def parse_choice(choice: str) -> Choice:
