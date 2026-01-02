@@ -82,7 +82,7 @@ def get_context(
 ) -> str:
     j = (i + 1) % 2
     return (
-        f"Last round you chose {last_choices[i].name} and your "
+        f"Last round you chose '{last_choices[i].name}' and your "
         f"friend chose '{last_choices[j].name}' so you were sentenced "
         f"to {last_scores[i]} years.\n\n"
     )
