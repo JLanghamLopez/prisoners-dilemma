@@ -44,9 +44,9 @@ class Guard(GreenAgent):
         except Exception as e:
             return False, f"Can't parse num_conversations_rounds: {e}"
 
-        assert n_conversation_rounds > 2, (
+        assert n_conversation_rounds > 1, (
             "num_conversations_rounds must be greater "
-            f"than 2, got {n_conversation_rounds}"
+            f"than 1, got {n_conversation_rounds}"
         )
 
         try:
