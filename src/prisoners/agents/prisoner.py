@@ -5,6 +5,7 @@ from a2a.types import AgentCapabilities, AgentCard
 from dotenv import load_dotenv
 from google.adk.a2a.utils.agent_to_a2a import to_a2a
 from google.adk.agents import Agent
+from google.adk.models.lite_llm import LiteLlm
 
 
 def main():
@@ -22,19 +23,20 @@ def main():
     args = parser.parse_args()
 
     root_agent = Agent(
-        name="prisoner",
-        model="gemini-2.5-flash-lite",
+        name="prisoners_benchmark",
+        model=LiteLlm(model="openai/gpt-4.1-mini"),
         description="Participates in an iterated prisoners dillema.",
         instruction=(
             "You are taking part in an iterated prisoners dillema where you must "
             "choose to stay-silent or betray your friend who is also a prisoner. "
             "Before making your choice you are allowed to send a fixed number of "
-            "messages to the other prisoner."
+            "messages to the other prisoner. You should aim to minimise the total "
+            "number of years you are sentenced to over all the rounds."
         ),
     )
 
     agent_card = AgentCard(
-        name="prisoner",
+        name="prisoners_benchmark",
         description="Participates in an iterated prisoners dillema.",
         url=args.card_url or f"http://{args.host}:{args.port}/",
         version="1.0.0",
