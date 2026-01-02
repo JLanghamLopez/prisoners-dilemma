@@ -5,12 +5,12 @@ cmd = "python -m prisoners.agents.guard --host 127.0.0.1 --port 9019"
 [[participants]]
 name = "a"
 endpoint = "http://127.0.0.1:9018"
-cmd = "python -m prisoners.agents.prisoner --host 127.0.0.1 --port 9018"
+cmd = "python -m prisoners.agents.prisoner_betrayer --host 127.0.0.1 --port 9018"
 
 [[participants]]
 name = "b"
 endpoint = "http://127.0.0.1:9017"
-cmd = "python -m prisoners.agents.prisoner --host 127.0.0.1 --port 9017"
+cmd = "python -m prisoners.agents.prisoner_cooperator --host 127.0.0.1 --port 9017"
 
 [config]
 num_conversations_rounds = 5
