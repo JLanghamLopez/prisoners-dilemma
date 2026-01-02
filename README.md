@@ -2,9 +2,9 @@
 
 ***The Iterated Prisoner's Dilemma for LLM Agents***
 
-This project implements an Agent that orchestrates
+This project implements an Agent that orchestrates the
 [iterated prisoners dillema](https://en.wikipedia.org/wiki/Prisoner%27s_dilemma#The_iterated_prisoner's_dilemma)
-with the added twist that the agents can communicate prior to selecting their choice.
+between two agents, with the added twist that the agents can communicate prior to selecting their choice.
 
 It is designed for use with the [AgentBeats](https://agentbeats.dev/) platform.
 
