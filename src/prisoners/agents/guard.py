@@ -25,14 +25,12 @@ logger = logging.getLogger("guard")
 
 class Guard(GreenAgent):
     def __init__(self):
-        self._required_participants = ["a", "b"]
-        self._required_config_keys = ["num_conversations_rounds", "num_rounds"]
+        self._participants = ("prisoner_a", "prisoner_b")
+        self._required_config_keys = ("num_conversations_rounds", "num_rounds")
         self._tool_provider = ToolProvider()
 
     def validate_request(self, request: EvalRequest) -> tuple[bool, str]:
-        missing_roles = set(self._required_participants) - set(
-            request.participants.keys()
-        )
+        missing_roles = set(self._participants) - set(request.participants.keys())
         if missing_roles:
             return False, f"Missing roles: {missing_roles}"
         missing_config_keys = set(self._required_config_keys) - set(
@@ -42,14 +40,21 @@ class Guard(GreenAgent):
             return False, f"Missing config keys: {missing_config_keys}"
 
         try:
-            int(request.config["num_conversations_rounds"])
+            n_conversation_rounds = int(request.config["num_conversations_rounds"])
         except Exception as e:
             return False, f"Can't parse num_conversations_rounds: {e}"
 
+        assert n_conversation_rounds > 1, (
+            "num_conversations_rounds must be greater "
+            f"than 1, got {n_conversation_rounds}"
+        )
+
         try:
-            int(request.config["num_rounds"])
+            num_rounds = int(request.config["num_rounds"])
         except Exception as e:
             return False, f"Can't parse num_rounds: {e}"
+
+        assert num_rounds > 0, f"num_rounds must be greater than 0, got {num_rounds}"
 
         return True, "ok"
 
@@ -67,7 +72,8 @@ class Guard(GreenAgent):
             scores: Optional[tuple[int, int]] = None
 
             for i in range(num_rounds):
-                start_msg = f"Beginning round {i} of {num_rounds}"
+                n = i + 1
+                start_msg = f"Beginning round {n} of {num_rounds}"
                 await updater.start_work(new_agent_text_message(start_msg))
                 logger.info(start_msg)
                 choices = await self.orchestrate_test(
@@ -77,7 +83,7 @@ class Guard(GreenAgent):
                 scores = utils.score_round(*choices)
                 score_history.append(scores)
                 logger.info(
-                    f"Round {i} choices - A: {choices[0].name}, B: {choices[1].name}"
+                    f"Round {n} choices - A: {choices[0].name}, B: {choices[1].name}"
                 )
 
             await updater.start_work(
@@ -88,14 +94,18 @@ class Guard(GreenAgent):
             if final_scores[0] == final_scores[1]:
                 winner = "draw"
             else:
-                winner = "a" if final_scores[0] < final_scores[1] else "b"
+                winner = (
+                    self._participants[0]
+                    if final_scores[0] < final_scores[1]
+                    else self._participants[1]
+                )
 
             results = EvalResult(
                 winner=winner,
-                scores={"a": final_scores[0], "b": final_scores[1]},
+                scores={self._participants[i]: final_scores[i] for i in range(2)},
                 choices={
-                    "a": [x[0].name for x in choice_history],
-                    "b": [x[1].name for x in choice_history],
+                    self._participants[i]: [x[i].name for x in choice_history]
+                    for i in range(2)
                 },
             )
 
@@ -118,7 +128,7 @@ class Guard(GreenAgent):
         last_choices: Optional[tuple[utils.Choice, utils.Choice]],
         last_scores: Optional[tuple[int, int]],
     ) -> tuple[utils.Choice, utils.Choice]:
-        conversation: dict[str, list[str]] = {"a": [], "b": []}
+        conversation: dict[str, list[str]] = {x: [] for x in self._participants}
 
         async def turn(role: str, prompt: str) -> str:
             _response = await self._tool_provider.talk_to_agent(
@@ -154,23 +164,24 @@ class Guard(GreenAgent):
 
         # Opening conversation
         response = await turn(
-            "a", f"{a_context}{context}Provide your first message to your friend."
+            self._participants[0],
+            f"{a_context}{context}Provide your first message to your friend.",
         )
         response = await turn(
-            "b",
+            self._participants[1],
             f"{b_context}{context}Your friend said: {response}, what is your response?",
         )
 
         # Remaining conversation rounds
         for _ in range(num_conversations_rounds - 2):
-            for x in ["a", "b"]:
+            for x in self._participants:
                 response = await turn(
                     x,
                     f"Your friend said: {response}, what is your response?",
                 )
 
         # Final response
-        for x in ["a", "b"]:
+        for x in self._participants:
             response = await turn(
                 x,
                 (
@@ -183,10 +194,20 @@ class Guard(GreenAgent):
             new_agent_text_message("The prisoners will now make their choice...")
         )
 
-        a_choice = await utils.get_choice("a", self._tool_provider, participants["a"])
-        b_choice = await utils.get_choice("b", self._tool_provider, participants["b"])
+        choices = (
+            await utils.get_choice(
+                self._participants[0],
+                self._tool_provider,
+                participants[self._participants[0]],
+            ),
+            await utils.get_choice(
+                self._participants[1],
+                self._tool_provider,
+                participants[self._participants[1]],
+            ),
+        )
 
-        return a_choice, b_choice
+        return choices
 
 
 async def main():
