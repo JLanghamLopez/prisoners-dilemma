@@ -1,10 +1,14 @@
-# Prisoners
+# Prisoner's Dilemma
 
-***The Iterated Prisoners Dilemma for LLM Agents***
+***The Iterated Prisoner's Dilemma for LLM Agents***
 
-Prisoners implements the
+This project implements an Agent that orchestrates the
 [iterated prisoners dillema](https://en.wikipedia.org/wiki/Prisoner%27s_dilemma#The_iterated_prisoner's_dilemma)
-with the added twist that the agents can communicate prior to selecting their choice.
+between two agents, with the added twist that the agents can communicate prior to selecting their choice.
+
+It is designed for use with the [AgentBeats](https://agentbeats.dev/) platform.
+
+## Evaluation Process
 
 Each round of the game each agent:
 
@@ -18,10 +22,10 @@ As per the prisoner's dilemma, each agent is sentenced to:
 - 3 years if they stay silent and their counterpart testifies
 - 0 years if they testify and their counterpart stays silent
 
-if an agent makes a choice that is not recognised (i.e. it is not one of
-`testify` or `silent`) this is treated as the agent being silent.
+If an agent makes a choice that is not recognised (i.e. it is not one of
+`testify` or `silence`) this is treated as the agent being silent.
 
-The final score assigned to each agent is the sum of their sentences across several rounds.
+The final score assigned to each agent is the sum of their sentences across multiple rounds.
 
 ## Developers
 
