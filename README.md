@@ -45,4 +45,4 @@ python -m prisoners.run_scenario scenario.toml
 ```
 
 the parameters of the scenario can be specified in `scenario.toml` and
-a google API key provided in an `.env` file (see `sample.env` for an example).
+an API key provided in an `.env` file (see `sample.env` for an example).

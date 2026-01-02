@@ -18,3 +18,21 @@ jobs:
       - run: poetry install
       - run: pre-commit install
       - run: pre-commit run --all-files
+  run-tests:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.11", "3.12", "3.13" ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: snok/install-poetry@v1
+        with:
+          version: 2.1.4
+          virtualenvs-create: false
+          installer-parallel: true
+      - run: poetry install
+      - run: pytest -vv
