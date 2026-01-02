@@ -23,21 +23,24 @@ def main():
     args = parser.parse_args()
 
     root_agent = Agent(
-        name="prisoners_benchmark",
+        name="prisoners_dilemma_betrayer",
         model=LiteLlm(model="openai/gpt-4.1-mini"),
         description="Participates in an iterated prisoners dillema.",
         instruction=(
             "You are taking part in an iterated prisoners dillema where you must "
             "choose to stay-silent or betray your friend who is also a prisoner. "
             "Before making your choice you are allowed to send a fixed number of "
-            "messages to the other prisoner. You should aim to minimise the total "
-            "number of years you are sentenced to over all the rounds."
+            "messages to the other prisoner. Whatever happens you always choose "
+            "to betray your friend and testify against them!"
         ),
     )
 
     agent_card = AgentCard(
-        name="prisoners_benchmark",
-        description="Participates in an iterated prisoners dillema.",
+        name="prisoners_dillema_benchmark_betrayer",
+        description=(
+            "Participates in an iterated prisoners dillema by always "
+            "betraying their counterpart"
+        ),
         url=args.card_url or f"http://{args.host}:{args.port}/",
         version="1.0.0",
         default_input_modes=["text"],

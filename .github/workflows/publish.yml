@@ -15,9 +15,12 @@ jobs:
     strategy:
       matrix:
         include:
-          # Update this to build your own agent images.
           - name: guard
-            dockerfile: Dockerfile.guard
+            dockerfile: dockerfiles/Dockerfile.guard
+          - name: prisoner-betrayer
+            dockerfile: dockerfiles/Dockerfile.prisoner_betrayer
+          - name: prisoner-cooperator
+            dockerfile: dockerfiles/Dockerfile.prisoner_cooperator
 
     # These permissions are required for the workflow to:
     # - Read repository contents (checkout code)
