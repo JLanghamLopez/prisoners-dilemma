@@ -18,4 +18,4 @@ class EvalRequest(BaseModel):
 class EvalResult(BaseModel):
     winner: str
     scores: dict[str, int]
-    choices: dict[str, list[Choice]]
+    choices: dict[str, list[str]]

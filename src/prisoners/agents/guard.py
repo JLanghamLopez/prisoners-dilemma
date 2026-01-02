@@ -94,8 +94,8 @@ class Guard(GreenAgent):
                 winner=winner,
                 scores={"a": final_scores[0], "b": final_scores[1]},
                 choices={
-                    "a": [x[0] for x in choice_history],
-                    "b": [x[1] for x in choice_history],
+                    "a": [x[0].name for x in choice_history],
+                    "b": [x[1].name for x in choice_history],
                 },
             )
 
@@ -183,8 +183,8 @@ class Guard(GreenAgent):
             new_agent_text_message("The prisoners will now make their choice...")
         )
 
-        a_choice = await utils.get_choice(self._tool_provider, participants["a"])
-        b_choice = await utils.get_choice(self._tool_provider, participants["b"])
+        a_choice = await utils.get_choice("a", self._tool_provider, participants["a"])
+        b_choice = await utils.get_choice("b", self._tool_provider, participants["b"])
 
         return a_choice, b_choice
 
