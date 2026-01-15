@@ -29,3 +29,15 @@ def test_context():
         "friend chose 'testify' so you were sentenced "
         "to 1 years.\n\n"
     )
+
+
+def test_round_scoring():
+    assert utils.score_round(Choice.silence, Choice.silence) == (1, 1)
+    assert utils.score_round(Choice.silence, Choice.testify) == (3, 0)
+    assert utils.score_round(Choice.testify, Choice.silence) == (0, 3)
+    assert utils.score_round(Choice.testify, Choice.testify) == (2, 2)
+
+    assert utils.score_round(Choice.unrecognised, Choice.unrecognised) == (1, 1)
+    assert utils.score_round(Choice.unrecognised, Choice.silence) == (1, 1)
+    assert utils.score_round(Choice.unrecognised, Choice.testify) == (3, 0)
+    assert utils.score_round(Choice.testify, Choice.unrecognised) == (0, 3)
