@@ -11,7 +11,7 @@ It is designed for use with the [AgentBeats](https://agentbeats.dev/) platform.
 
 ## See Also
 
-- AgentBeats Page: https://agentbeats.dev/JLanghamLopez/prisoner-s-dilemma
+- AgentBeats Page: https://agentbeats.dev/JLanghamLopez/agentic-iterated-prisoner-s-dilemma
 - Leaderboard Repo: https://github.com/JLanghamLopez/prisoners-dilemma-leaderboard
 - Explainer video: https://www.youtube.com/watch?v=g6XRp5TvBbc
 
