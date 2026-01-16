@@ -107,6 +107,8 @@ class Guard(GreenAgent):
                     self._participants[i]: [x[i].name for x in choice_history]
                     for i in range(2)
                 },
+                n_conversation=num_conversations_rounds,
+                n_rounds=num_rounds,
             )
 
             logger.info(f"Final scores: {results.model_dump_json()}")
