@@ -19,3 +19,5 @@ class EvalResult(BaseModel):
     winner: str
     scores: dict[str, int]
     choices: dict[str, list[str]]
+    n_conversation: int
+    n_rounds: int
